@@ -1,0 +1,107 @@
+### /etc/vsftpd/vsftpd.conf
+
+# Banner :		# Message de Bienvenu sur le serveur.
+ftpd_banner="Welcom on Liberty City FTP"
+
+# Listen Mode :
+listen=YES
+#			# IPv4 Protocol
+listen_ipv6=NO
+#			# IPv6 Protocol
+#listen_port=21
+#			# Port (21 par defaut)
+
+# anonymous FTP :	# FTP anonyme, Pas d'identification de l'utilisateur.
+anonymous_enable=NO
+#			# NO gestion pa user / YES anonyme.
+#anon_upload_enable=NO
+#			# Autoriser l'UPLOAD pour les anonymes.
+#anon_mkdir_write_enable=NO
+#			# Autoriser la creation de repertoire.
+#anon_other_write_enable=NO
+#			# Autoriser l'ECRITURE pour les anonymes.
+#anon_world_readable_only=YES
+#			# Activer le ReadOnly pour les anonymes.
+#local_root=<Path_anonym_Dir>
+#			# Indiquer le repertoire du chroot anonyme.
+
+# Enable Local User :	# Activation & Gestion des Utilisateurs Locaux
+local_enable=YES
+#			# Activer les Utilisateurs Locaux.
+write_enable=YES
+#			# Autoriser le Utilisateurs Locaux à ECRIRE.
+local_umask=022
+#			# Wildcard indiquant les Permissions imposé au repertoire créer.
+
+# Chroot :		# Bloque le local user dans son repertoire HOME.
+chroot_local_user=YES
+#			# Active le chroot.
+chroot_list_enable=YES
+#			# Etablie une liste d'user non chrooté
+chroot_list_file=/etc/vsftpd/vsftpd.chroot_list
+#			# Chemin vers la liste.
+allow_writeable_chroot=YES
+#			# RW dans le chroot.
+secure_chroot_dir=/var/run/vsftpd/empty
+#			# Secure chroot. (le repertoire doit etre créé).
+
+
+# Configuration suplémentaire (Message/Time/Log/Ps) :
+dirmessage_enable=YES
+#			# Activation du Message de déplacement entre les repertoire.
+use_localtime=YES
+#			# Utiliser l'horloge locale de la machine.
+xferlog_enable=YES
+#			# Stocker les Traces des uploads/downloads.
+pam_service_name=vsftpd
+#			# Nom pam.
+#setproctile_enable=YES
+#    !!!!!!!!!!!!!!!	# Affichage des connexions dans "ps".
+
+
+# Passive Mode :	# Mode Passif, IMPORTANT si le server est accessible depuis le WWW.
+pasv_enable=YES
+#			# Activation du mode Passif.
+pasv_promiscuous=NO
+#			# A revoir
+port_promiscuous=NO
+#pasv_min_port=40000
+#			# Imposer au client d'uiliser un Port_Client > 40000.
+#pasv_max_port=40100
+#			# Imposser au client d'utiliser un Port_Client < 40100.
+#pasv_address=<@IP>
+#			# Spécifier une @IP cliente ou un Réseau Client.
+
+# -------------------Options for SSL-------------------------
+# -------------------encrypted connections-------------------
+
+#ssl_enable=YES
+#			# Active le FTP over SSL.
+#allow_anon_ssl=NO
+#			# Active le FTP over SSL aussi pour les anonymes.
+#force_local-data_ssl=YES
+#			# La data sera toujours chiffré.
+#force_local_logins_ssl=YES
+#			# La meta-data sera toujours chiffré.
+#require_ssl_reuse=NO
+#			# Certains Client en ont besoin.
+
+# Version SSL :
+#ssl_tlsv1=YES
+#ssl_tlsv2=YES
+#ssl_tlsv3=YES
+
+# Chemin vers les Informations SSL :
+#rsa_cert_file=<chemin/vers/le/certificat/.crt
+#rsa_private_key_file=/vers/la/clé/privée/.key
+
+
+##################################################################################################
+##################################################################################################
+##################################################################################################
+####################### Official Default Configuration ###########################################
+##################################################################################################
+##################################################################################################
+#
+#
+

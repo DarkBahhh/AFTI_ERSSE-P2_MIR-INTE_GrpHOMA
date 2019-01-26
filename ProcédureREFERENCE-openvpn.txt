@@ -1,0 +1,194 @@
+#################################################################################
+###
+### Procedure de déploiement OPENVPN-NOMADE :
+###		Exemple sur CentOS7.
+###
+#################################################################################
+#
+
+###
+ Préambule :
+	Dans cette procédure, nous allons créer un serveur openvpn pour client NOMADE, la création de ce serveur nécessite la configuration d'information PKI pour SSL. Ainsi, nous allons créer une Autorité de Certification (CA) afin de sécurisé les connexions VPN et évité de passer par un certificat auto-signé x509, trop peu sécurisé.
+	Il est possible de créer le CA sur le serveur VPN pour aller plus vite où sur un serveur distinct.
+	La description de la procédure se fera sur CentOS7.
+
+Installer openvpn :
+	Sur CentOS7, il est nécessaire de passer par les dépôts "epel-release" pour obtenir les paquets:
+		# yum install epel-release
+		# yum update
+	
+	# yum install openvpn
+		On peut voir le répertoire "/etc/openvpn/", où l'on trouve la configuration du serveur.
+
+
+
+###
+ Partie 1 : Easy-RSA.
+
+	Nous utiliserons l'outil "easy-rsa" pour générer la configuration PKI de nos échange SSL :
+		Récupération de easy-rsa3 sur GitHub pour toutes les machines (le depot GitHub nous offre la version la plus a jours de easy-rsa) :
+			# cd /root/
+			# yum install git
+			# git clone https://github.com/OpenVPN/easy-rsa.git
+			# cd /root/easy-rsa/easyrsa3/
+
+
+		Configuration des Informations de l'entreprise (fichier vars):
+			# cd /root/easy-rsa/easyrsa3/
+			# cp vars.example vars
+			# vi vars
+				Remplir les imformations dans la section "Oraganizational fields" / On peut aussi directement "cp" un fichier "vars" préparé au préalable.
+				Ces informations devront être les même pour le CA, le serveur et les clients. Grâce à la présence de ce fichier "vars", il est judicieux de copier ce fichier sur toutes les machines pour éviter les erreurs.
+
+
+	Création de l'Autorité de Certification (CA):
+		Le CA peut être un serveur à part où directement le serveur VPN (pour des raisons de rapidité), mais les couple key/certificat devront être distinct.
+		# cd /root/easy-rsa/easyrsa3/
+
+		Initialiser le PKI :
+			# ./easyrsa init-pki
+				Cette commande initialise PKI a partir du fichier "vars", elle doit être relancer avant n'importe quelle autre commande easy-rsa si le serveur est redémarrer.
+
+		Création du couple clé/certificat du CA :
+			# ./easyrsa build-ca
+				!!! Lors de la création du CA, le système vous demandera une Passphrase pour le fichier "ca.key" ; !!NOTEZ bien cette Passphrase!!, vous en aurez besoin pour signer les requêtes de signature a destination de ce CA.
+			Pour finir on peut voir un certificat "ca.crt" dans le répertoire "./pki/" et la clé "ca.key" dans le répertoire "./pki/private/".
+				# ls -l ./pki/
+				# ls -l ./pki/private/
+
+
+	Création des Informations PKI pour le serveur VPN (se rendre sur le serveur VPN):
+		Si le serveur VPN est un autre serveur que le CA, installez "easy-rsa3" de la même manière, copiez le fichier "vars" de la même manière, et lancer l'initialisation PKI:
+			# cd /root/easy-rsa/easyrsa3/
+			# ./easyrsa init-pki
+
+		# cd /root/easy-rsa/easyrsa3/
+		
+		Création d'une clé et d'une requête de signature pour le serveur VPN :
+			# ./easyrsa gen-req <nom-du-serveur>
+				!!! Lors de la création du certificat du serveur, le systeme vous demandera une Passphrase pour le fichier "<nom-du-serveur>.key" ; !!NOTEZ bien cette Passphrase!!, le système vous la demandera au démarrage du service openvpn.
+			On obtient une requête de signature "<nom-du-serveur>.req" dans le répertoire "./pki/req/" ainsi qu'une clé "<nom-du-serveur>.key" dans le répertoire "./pki/private/"
+
+		Envoyez ce "<nom-du-serveur>.req" sur le CA afin qu'il le signe.
+		
+		Rendez vous maintenant sur le CA afin d'effectuer la signature ...
+
+		# cd /root/easy-rsa/easyrsa3/
+		Importer le "<nom-du-serveur>.req" dans le easy-rsa du CA :
+			# ./easyrsa import-req /chemin/vers/<nom-du-serveur>.req SHORTNAME-UNIQUE-DU-SRV
+				Où SHORTNAME-UNIQUE-DU-SRV est un alias unique attribué à la machine en question.
+			Cette commande va créer un fichier <SHORTNAME-UNIQUE-DU-SRV>.req dans le répertoire "./pki/reqs" du CA.
+
+		Signer ensuite la requête:
+			# ./easyrsa sign server SHORTNAME-UNIQUE
+				Ce qui créé pour finir un certificat "SHORTNAME-UNIQUE-DU-SRV.crt" dans le répertoire "./pki/issued/" du serveur CA.
+
+		Maintenant initialiser la clé "Diffie-Hellman" sur le serveur VPN:
+			# cd /root/easy-rsa/easyrsa3/
+			# ./easyrsa gen-dh
+			Cela va créer un "dh.pem" dans le répertoire "./pki/".
+
+		Pour finir rapatrier tout les fichiers générés sur le serveur VPN :
+			Le fichier "SHORTNAME-UNIQUE-DU-SRV.crt" qui se trouve sur le CA dans "./pki/issued/"
+			Le fichier "<nom-du-serveur>.req" qui se trouve sur le serveur VPN dans "./pki/reqs"
+			Le fichier "<nom-du-serveur>.key" qui se trouve sur le serveur VPN dans "./pki/private"
+			Copiez ces fichiers dans le répertoire "/etc/openvpn/" du serveur VPN.
+
+		On finit en initialisant la clé "Diffie-Hellman" sur le serveur VPN:
+			# ./easyrsa gen-dh
+				Cela va créer un "dh.pem" dans le répertoire "./pki/", copiez le aussi dans "/etc/openvpn/" sur le serveur VPN.
+
+
+	Création des Informations PKI pour un client GNU/Linux (se rendre sur le client):
+		Créer une requête de signature comme fait pour le serveur:
+			Installer easyrsa3 ; initialiser le fichier "vars" ;
+			# ./easyrsa init-pki
+			# ./easyrsa gen-req <nom-du-client>
+				!!! Lors de la création du certificat du client, le systeme vous demandera une Passphrase pour le fichier "<nom-du-client>.key" ; !!NOTEZ bien cette Passphrase!!, le système vous la demandera pour vous connecter au serveur VPN.
+
+		Transférer le <nom-du-client>.req qui se trouve dans "./pki/reqs" vers le CA et importez le :
+			# /easyrsa import-req /chemin/vers/<nom-du-client>.req SHORTNAME-UNIQUE-DU-SRV
+
+		Signer ensuite la requête:
+			# ./easyrsa sign client SHORTNAME-UNIQUE-DU-CLIENT
+
+		Pour finir rapatrier tout les fichiers générés sur le client:
+			Le fichier "SHORTNAME-UNIQUE-DU-CLIENT.crt" qui se trouve sur le CA dans "./pki/issued/"
+			Le fichier "<nom-du-client>.req" qui se trouve sur le client dans "./pki/reqs"
+			Le fichier "<nom-du-client>.key" qui se trouve sur le client dans "./pki/private"
+		Copiez ces fichiers dans le répertoire "/etc/openvpn/" du client.
+###
+
+
+
+###
+ Partie 2 : Configuration du Serveur OpenVPN
+	Copier le fichier exemple de configuration dans le répertoire de configuration de openvpn :
+		# cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
+		# gunzip /etc/openvpn/server.conf.gz
+	Renommer le fichier avec le nom du serveur :
+		# mv /etc/openvpn/server.conf /etc/openvpn/<nom-du-serveur>.conf
+
+	Éditer ce fichier afin de le configurer et modifier les champs suivant :
+		Les champs vers des fichiers prennent par defaut le PATH "/etc/openvpn/", si le fichier en dans ce répertoire le Nom du fichier fera l'affaire (dans cette exemple nous avons déplacé toute les informations PKI du serveur juste après les avoir générés [ REF Partie 1]), si le fichier est ailleurs vous devez mettre le Chemin Absolue vers le fichier.
+
+		port : Port d'écoute du serveur (1194 par defaut).
+		ca : Nom du certificat du CA ("ca.crt").
+		cert : Nom du certificat du serveur VPN ("<SHORTNAME-UNIQUE-DU-SRV>.crt").
+		key : Nom de la clé du serveur VPN ("<nom-du-serveur>.key").
+		dh : Nom du fichier Diffie-Hellman ("dh.pem").
+		server : Il s'agit du réseau virtuel créé pour le tunnel VPN. Le serveur prendra la première addresse de ce réseau. La syntaxe de ce champ est : "server <NETWORK> <MASK>" ; exemple : "server 10.100.0.0 255.255.255.0", ce qui donnera l'@IP "10.100.0.1/24" au serveur VPN).
+		push "redirect-gateway def1 bypass-dhcp" : Dé-commenter cette ligne afin que les clients utilisent le serveur VPN comme passerelle par défaut.
+		push "dhcp-option DNS <@IP>" : Donne la configuration DNS, on peut mettre cette ligne autant de fois que l'on veut ajouter des serveurs DNS (Nécessaire si l'option précédente est activé), Dé-commenter pour activer.
+		client-to-client : Dé-commenter afin que les clients puissent communiquer entre eux.
+		Pour finir, commenter la ligne du champ "tls-auth".
+
+	Activer le routage sur le serveur VPN :
+		Éditer le fichier "/etc/sysctl.conf" et dé-commenter (ou ajouter sur CentOS7) ...
+		# net.ipv4.ip_forward = 1
+	Activer le NAT pour permettre au client de se rendre sur INTERNET (relancer la commande à chaque redémarrage de la machine) :
+		# iptables -t nat -A POSTROUTING -o <Nom_Carte_Réseau_WAN> -j MASQUERADE
+
+	Démarrage du service et activation :
+		Activer le service pour qu'il démarre avec l'OS :
+			# systemctl enable openvpn@nom-du-serveur.service
+		Démarrer le service (au démarrage du service, OpenVPN vous demandera la Passphrase de la clé du serveur VPN "<nom-du-serveur>.key" ; entrer la commande "systemd-tty-ask-password-agent" et tapez ensuite le mot de passe) :
+			# systemctl start openvpn@nom-du-serveur.service
+			# systemd-tty-ask-password-agent
+###
+
+
+
+###
+ Partie 3 : Configuration du Client OpenVPN (client GNU/Linux)
+	De la même manière que pour le serveur, rapatrier les information PKI sur le client, dans "/etc/openvpn" :
+		
+	Copier le fichier exemple de configuration dans le répertoire de configuration de openvpn :
+		# cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf /etc/openvpn/
+
+	Editer ce fichier afin de configurer et modifier les champs suivant :
+		Comme pour le fichier de configurations du serveur le PATH par défaut est "/etc/openvpn/", entrer le Chemin Absolue si les fichiers PKI ne sont pas dans ce PATH.
+
+		remote : Adresse du serveur VPN et son port séparé par un espace (exemple: <IPpub> 1194)
+		ca : Nom du certificat du CA ("ca.crt")
+		cert : Nom du certificat du client ("<SHORTNAME-UNIQUE-DU-CLIENT>.crt")
+		key : Nom de la clé du client ("<nom-du-client.key")
+
+	Démarrer OpenVPN sur le client :
+		# service openvpn start
+	Pour vérifier l’état de la connexions, chercher une interface "tun0" dans le retour de la commande ...
+		# ip addr
+###
+
+
+###
+ Partie 4 BONUS : Configuration d'un client Windows
+
+
+	A FINIR !!!!!!!!!!!!!!!!!!!!!!! :
+		Client OpenVPN sur Windows?
+		Génération PKI sur Windows?
+
+
+
+

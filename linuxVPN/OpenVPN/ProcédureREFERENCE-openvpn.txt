@@ -192,3 +192,66 @@ Installer openvpn :
 
 
 
+
+
+
+
+Procédure simplifier :
+
+
+Connectez vous avec putty sur votre Machine linux :
+
+Code:
+
+apt-get update
+apt-get upgrade
+
+Téléchargez openvpn-as Debian 7 ou 8 eb version amd/x86 32bits recommandé ,verifier directement sur le site openvpn:
+Code:
+
+wget http://swupdate.openvpn.org/as/openvpn-as-2.0.7-Debian7.i386.deb
+dpkg -i openvpn-as-2.0.7-Debian7.i386.deb
+passwd openvpn
+
+puis créez votre mot de passe openvpn :
+code : 
+sudo passwd openvpn
+
+quand l'installation est terminée , allez dans votre navigateur depuis windows :
+
+https://ipdevotrserveur:943/admin
+
+acceptez le certificat et ensuite tapez
+
+login: openvpn
+password: le mot de passe que vous avez crée pour openvpn.
+
+ensuite acceptez les termes (agree) et vous devriez avoir accés au panel openvpn-as par le navigateur.
+
+
+il vous reste a télecharger le client openvpn pour windows qui permet de se connecter a votre serveur pour utiliser sa connexion.
+
+http://openvpn.net/index.php/access-...as-sw/357.html
+
+prenez : OpenVPN Desktop Client Download for Windows
+
+installez le puis quand c'est fait ouvrez "openvpn client" ,
+sous server address entrez l'ip de votre vps puis cliquez sur connect.
+
+username: openvpn
+password: le mot de passe openvpn que vous avez crée.
+
+untrusted security certificate:
+cliquez 'this time'
+
+et voila normalement vous etes connectés sur votre serveur a partir de windows.
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,147 @@
+CatTools Comparison Report
+Date: 20 juin 2018
+Time: 10:52:00
+
+New config file: E:\CatTools3\Configs\TH3-WAN-LAN\Config.Current.Running.NIT-CLD-F200-CLUSTER.txt
+Old config file: E:\CatTools3\Dated Configs\TH3-WAN-LAN\Config.Dated.Running.NIT-CLD-F200-CLUSTER.20180620-1047.txt
+
+Line changes found:   52
+Line additions found: 0
+Line deletions found: 4
+Line ignores found: 2
+
+
+
+
+^^^^^^^^ 1 change at line (2032) ^^^^^^^^
+    New:
+        DEK-Info: DES-EDE3-CBC,E654AE1C3CAE4BDE
+    Original:
+        DEK-Info: DES-EDE3-CBC,F02C3534C53AE7B9
+
+
+^^^^^^^^ 25 changes from line (2034) ^^^^^^^^
+    New:
+        PrVMDFxxL8GqG7+re/bbL49YgHuIxEwTwmLG0LhjZILD0LFuI3hy82Bi7oi3lRAz
+        zs+c0kt5+8fh7zFLaFckSzGcCLNW/9IisSXT3/ng/UU1YxT/wMjvqIC1vJBhOI7t
+        5xMnvOJnQ6ZA4NNVIZLJwrwg8pYf7oDZs/+ZxtqwqXSWMN4MbQWPO+CW4CysSUvR
+        iPRp7WGHgqoJIIH8nk5ooWoYcsZGWSGJ5ar12fMVfP+AVNLtguGn9vBPugSdCFeN
+        PSgKnfH4jsofb3uQJfRfKb6JMCbspcxEBwlSC+t3eZp6HJ8rzbADxgIUdXzI9Wk1
+        mYQHybMH8wD+0HtRnVpnMY180XBXr11KlXps/NglZ8W/j435h6wylXmW6uLmHUex
+        ZIdmUadIMP7QhFRmKuEosF2dtHwdauHWZCnYvAPP0hf+L53hdW+EXVDeME+gA3LU
+        Bz119GfOZSJMylaompcXVdIqVntA35DGLASdVBBXVymLb8W9/7Texrz5QW5tEd9V
+        67rWYOVw6050Et4V/XWIuM87ssFj/TXchiHMOwbIIU1YGQLqjAszsJGYuwbVDIk3
+        pVyW5+4jTiIDk6zpdUGV6erXWJBaZ/Z7fQ10tNBNMNbm3w98sPfaSOfU5Vga7THz
+        +sTeW8a7tAg5uHQhHir+YbyYFv7eUow69exaL8m4QePQI7vsTbbrmj69bJ7oBI8I
+        iKCAIbX2/PEa5igP3RVIlvIYDxk+ogTwWPxGW8bJKfsn2EqBRqzW0glir4UaBujp
+        x4l4el3bhGWqc9+qKI8yn8YE8fSvUTWNQngWZg0+IjTm4+UKi0p24XZN08XatJlW
+        4pcl2yfHkciOjUBs6z7JRDtYdp5xKlkc3G7YTMpcLlHf5usJnennL2P5N9fSVaor
+        dQjKeqGU2Ad2cVuyPUabfycy4S92j4t6ZPcFDO/mY+RneD8oYtqdkNrfvofR4wTl
+        X91+bV5DYEDiGsj8fdLNmPxLKWif+wUcwv3q53ercv6/i3EG5a22ChyQ9Hmm0sIi
+        4JZz6bAir2oVso/Eogi6dzMBJkdiagVk2MEyTL0c0Ln+YpEDUHbtLOwHdo386vLG
+        XaI0qyJ1DDws5NQfZQgX4kTQADAWkdu6oJVsd+JLGjnzS0gpZekkYoJVQVORBMfs
+        XfajdLgPmBbXPv2yF6fBgL0RmnIDdfsjk3Z1OtG6WXady0CzKplett9TsRMeo44s
+        RT5JcJ58ZfCieiPRkC3NUEDaU+C5BkibZBLGf4h8wtZh2zhB0PkyO084Egvs4hG8
+        D56g4rDp1f5NwwWa4ACd4xZOi/irPrblsTl5QUTuWkyfOW4gS0dtddrAFm95ibY3
+        CInclRlrItIea3k5RDCYIE1YUiIR3KHIKpieLh+QV2P3K0y4FnRypD/Bw36bHf1A
+        qG81Dr9jGTgfE4SxsPoIjZwmlfT7+XKsT5aZjwquoKKaSUDQyH3Idn43uOJsdNiH
+        zFg8lz+CGoty6hz/KplczG9sJvBHccrp1Xi20Gm18Th0EIqJ0LI/u7VaK9PHxVn8
+        otJTRVyd5iA8kIQfk2HJZIZLZMSKzUXjht4POrVlAB8YMG9mEGw9Eg==
+    Original:
+        BSLyndJTAFhpYahTCZfS/qiGHrqeTXiLpbVpeo9ITADBWMJ1KNNDOGGJiPMp1cN+
+        7avqTUY0JyvyodBTbaHaBf73JO8gtIm+5t6V2WaNXJVxUu/vo01GviRK5H3VQAvp
+        p252OBHpcsqyPviV/w6eQX8+ke93Qs4IrdsNpMsbmXd9w3A3kUkLw5291ctOFbuG
+        fcysFHxQcmqeKnq4SIudSOqU/X0H89O9Nqd1a7wFzmLWN8KkxtojzCLs9YxnhLpA
+        lNhzGAjN4wThCdfUaJ9ZQxUBNwjfS1B615ki+C6AdaIxP1GDmLPKPIVf+O4Dl4Je
+        6Te4NvD/vXCGSvHByvhpf5sWENJNyx1eQwU3pyUKGDNqVtsRtGLHeSxrEoksZr/1
+        Q0PBpqOYnpADHo8G0iU4cCFkU1fabxZtIeoYB0QorGf0UDRkkzO1vRwAv2O9OipY
+        rwh0f+gOrXWgSPzP+yz9Rx58zoBhFEZypKOIFocqw91qsG2J2zBItXk0/m7AfOjI
+        BoG97R3Reb3R4EKq4oKfXu+HPkhM79AVmvV9Gsj4ORhPAYgoKTdomazQ0Pppe6Fa
+        g9xlcXxyWmLm7tdyG4lOevDmY6LtobPPt3qMax4uIAUW2a+bPLObnXMEYRzUrl+J
+        rJt+UxxTrI59QSFXGQNtfSWBvBL/udLdZzK3l4DSE5EgIrL25j6m2xuADGMNgvBX
+        IwyT/QrPqqFVT8UDNPZiVbMlyUQ8thfKIQKO3Eidv7DRPk+NzemvcNF9KzR3VgKA
+        ePE8DKRdpp695UPb+g6fAkqXIJsJGGCkngsIQeYcXrU/NN3uE1XTqvWP0DyYhaGe
+        EYy4enZySbwVAWVwqeUH3OiRXr2Z+uTgHQ9GXpGySFfCVtL/rLs2WsHLVtewMSvH
+        Jd4F5hS17Z7GBCDx2LjzV8N8v37XYc1Kolch+RnBIaF/JnX3BphsKgI2ms+0/BWw
+        3PRtjN75HNisAQ7uLOoyWGypkM1N82ORLVLSUG1L2/aR91K+YJTA15LStJpTQMkz
+        HKmWjeXye9ZibD0HoID4oaMGU42DaNW/HnzuIgcVhJXGzvNzdumWinKmNG7ribWR
+        bf8DnN+0W5KK+/mcU0JAFyaPt2F+SsPY2UScOQ2nPTl95jkzaRjJmmSnOFokR6gO
+        Cn0cDy6Eq7GW1ZqiWAoKxs+lody5dOjkcVTicU1ZA2trC5b6YPJrb30PbvZHeCkN
+        F0s6gG3b63Vt9tqcDHDAW1iPIubh+cxQxmEFkwokU1pNelWEYk9nLISZefdiYFn6
+        h0gPnA/2DngQLrFeP/eWQiUsqof1+JGEA7BwwXJie1epKvjOKrPPsXpZwIVylCvQ
+        2mDT+IE5pgDnM7fk+3SXsoUYefQC7iwpAlFDQGiMzt8EGz1T9JJajNl7alDAKZDn
+        JsihLWMc69eHDBX1PDJ3hmppogB18L1I9plyFgdbSQntDtLIO+P80PXiXOIqmXNv
+        OCm01Mly4hKZY05DbolPhZsSmau0raZ04o1DWcu2XhYgFvFMzLDQAXGLqv5mZ0fv
+        AgxFPiWDtLCcTmVwdzwFG5OMfLUjdHwSvXH9nyJjtfRByzj71ydnxQ==
+
+
+^^^^^^^^ 1 change at line (2095) ^^^^^^^^
+    New:
+        DEK-Info: DES-EDE3-CBC,07163CDCC20938C8
+    Original:
+        DEK-Info: DES-EDE3-CBC,886AD560EC5ECB03
+
+
+^^^^^^^^ 25 changes from line (2097) ^^^^^^^^
+    New:
+        TqJs3Xt7+wGIPDfLOMorW/09f+uBKftPf0Kj9tG5ESM1BYKrlj7gGdDIez2nxdLY
+        r1/+oIes8tkZ0UOJ5A1ImF1WBO5PIR3r4c8aLBJPluRrSM1bu37LkglRWfy2WGkG
+        hWCMdQMzvyk/iLHArQFT2xaQErJZyeLuO7kw4GK4X4TEoZfrb1lZfZkJTFpX0mzG
+        NUgliVe1lqA3nZcTyXzx/yj1sfngKGalmFhoe5xX3m/okZRmHfYCdA1inwBlk93I
+        JUV0O/06B+JH3L+Uo/1xJyWwW6qO0TgGqUIzxpmRCyo6CN15g+r815IvFaE2Y7QY
+        dwoNyJ71+0tZ3rFhL1vBn2GJ4RC5RofxDWuNGiiMXl5tCmsvOJMmDCpSyQEEeTF3
+        z1MHSRuYadPT+CZ+/7ZEWLW/853ZIy4AL/MzGUAmd9OfsdEOjnnAriS9O5buzLdI
+        J2fEZCRZR26j2TOeoTfdPergjiAV+IZapT0py62vr1/Gb9Sj326DozTMxoNLCBaR
+        tPSAKd/learAVWyiwndMZmI+dd7T/8xhOqDh12YKMNF/lsWWdaTwR2hNh+bT2IJ7
+        TrBoLjm3p+Y1yNKFOIJdNw4nLHBk26e+CDTRT8PHZGEwfHe8eUSI7IS+VnOPxm5W
+        vqdzvZE9tUEQVG2WVHGEbXJLat2BdWEmq3knmapEDQc6GJPgG9RN856KmL7iAgQg
+        BzFPi4QUm9sSM+4a+7ACln8JcSSihYnIb8bwztD+Yaz/hT2xY7BQqyU+eZNGfjTj
+        bvsXTwN/727yTppLVVy2qnQ27APXKUxMTwPehV/uvBaR6VvqWsi4L5fgq088vB0N
+        2SzRSf5pbwm5bBUsHzk3LrnbMBoC0Tb3cB19uxUDD8+TgSnqlBf3DiHJ7Kqfo9yq
+        7762Oylko1Wp+t1paWJftbyfgYh07MlOIDO4s71o4FPepsqDbBWgDu2Ew0qSarEL
+        nFn9FqGb/P3y9xNVndttNSqQmCVKAQsRiXQKBTuDct8Ch5Ah2RSpvpaCV/IIecb8
+        n53i6D3PXDpCMfccj7LWycfBTqFQLuscEYiI7w6Qwhf2Radeqv9IV1ZTFE1IYq58
+        A3dYsYMFCSVi3O98p69uRvIspjYc/2ZNxH0xGlhMoCRdUnQ/WTc1AUmhUfjwkWQP
+        9cFoeVKZijJWIwRLcQBvolzrow96ZV+QMyMV465jwnzAUypzhGCy5dymtDc65cbO
+        SeljtFL+i5/D7qxCz+WrOV1tKyyhm2XsQsPBY3neKMNfVKXI4FqCmn/tZuRoGd5E
+        ePnNOMDrMN1+y6RMT+0zm+oNFK4ldLBROyekS8bZ9grpIB1kGce4BgTn85Jc3uaU
+        f5T9S3euC2E4NW0gtNnhg7IJCHw7X0/D70aEnG0le5Oe7abaPKVBM0m22Rn04o+m
+        T8AtFTlTJdZLGZZZeIQ/27MO6YBGrVVTnYR+j+74OZSq9HjaScAuuHZkWRthOlBU
+        pYPbSwh0/zTstp2FOTcw0udzoMwBNGONnycjVQGiPuhHP8pTpMGjRZ9qjKFgdLwi
+        hezBgIK7VaAzyhpPIUxfw6XY7l2oXLEeEiexJ+9r7DKMTMs2Wovx2w==
+    Original:
+        yszdYCmgLnjtHgb0xslY5luX5Xbt//r+rRDOkZsb83kd+uB7V0qgYKoVVxAAgkMZ
+        EvIh+Q0SsvlR15TMkChyTAQuSAcsmwxpqms8hf1Y3IH9z+xGO467k2DYJZLiWLAC
+        FjYpGXz3pXRbJnylvslQ9zN/v2Zv7bSoCFV/nCUZipHEAs+kA/d1IwzX23EOp58H
+        IkA3cLOy76a21xtmsuhHCDOfYtD+vwTdB9sHKAwPLAhOsfLr1SsTyAzNUt0VmWF0
+        otmi8ayLqwbsQfbE+pZo3QPqBwpVV3bjuZEjBThwMsuMFwHynMtYak+WwTWfLPiI
+        cD8X4mXiYpzaEZYIApXvHmvHOekaRBO0P6WrK7gdKNBSyJehj9p2YapwqIn39Frd
+        9uMXV2eXBodpGewvtum9GQJlZx0XOSYdWLObumGbjYTdCbzmng2BmSEjdGe9az2N
+        vQynjA4EMskKp0uCLH9BfGVkIJpnebes8gvBuuitfnW90u9UwArmFIgAXKqGli6w
+        MiLf/eHYDYeRdYp1UR756B0kQY1a41So6xPKUzaJfGP6JLZ9aNj6nGwdqhKuCt4p
+        C5Yya4XdYvC9gS9NvBB0qOiX4AvtcnS515iGxTnuftHeWlsDFI9KU7hpnzKerEXM
+        gLE5FkwECE7Nxu6sIaDfrch5QaHqsJ633ITh7MipJo+i/B9fbkSjb3f4P47w0itl
+        PTwHsxu3yS7//C2U4MZSDV8CgI5hyslWD++hGGteRbq701NNKOvk1ufemO66O1R2
+        odTCjTH0g3sOPhqs4Gcv022WHbXXHSr62XxkdgBJmFB8ChVhVQxhc5nc4Vzvn7FA
+        oVX04WC5D7uFHBt7mrQ9RNIKiHBtEBXjXxLVrYx1flGIP4zqFdm3Bc/HMfJXfyvC
+        og9PhWZuQjV19xsv6cNZNGqfCiYFBCxVrnNm72tbhJ1kijVc5KMmBvUScbLH6EZg
+        c+EZCQCN/uN1egB0095ZC37MtVmhae5E6bLIsYtOp+0GnASAY/JCpPxd60N8EmZw
+        X7hSgC1asbv4ylkSfYwnd9ubXWYPDp7H8oOec44Swj493V602GwWPuHMGfGtbxqv
+        kN2oC9o8aVUlzSE7OSqM9ss72ylbMS2Jz1750Eaw49awu+ins/Q4vvmBrDkezA+y
+        74aZvdB7BNPCz0s5I9+PIQA2C4kkE78sWzdkjSXcyP1PrBxhowQxhgWO62ffIdmc
+        I61MVfHHWXni4lOdcIowW5BLsh4ujzbE+Klzb3W0ssxDaDxQeJhmG9hclRRHp5VN
+        aTv+NpQbXRU+gCeYrSWP/BmgggrwCFJfrH858HPDDuueue8eYMGltYzsxVtbXuB2
+        UBzJKM9eDuoSMtMbtPKlmlMMyTxeYqXzQjuoHjrIE1VSBafw5kOG6ISCG0JJYg7B
+        VIPBHL1eM8JzKFoqyQeN7jip/Cu3enmpwRddgcec5H7EAcdvTeV68F0ACP8LyTNM
+        pSQ54n7eEpgkiaKdnjZXkhn1tUUaASBky2MAit4895hAdlDGiTskrCvPR6rtV4nD
+        YIaUtcFMG2Z3l6TuLU4cxJZrG3Qxe57ps75scOcP6+Jh0+51uDdk9g==
+
+
+-------- 2 deletions after line (2222) --------
+        config system fortiguard
+        end
+
+
+-------- 2 deletions after line (2227) --------
+        config log syslogd setting
+        end

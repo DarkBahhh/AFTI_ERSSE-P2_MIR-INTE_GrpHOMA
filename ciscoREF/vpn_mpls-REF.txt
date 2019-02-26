@@ -1,0 +1,113 @@
+######### CMD : vpn-mpls ##########################################
+
+
+Notes importantes :
+
+	Cette références N'est PAS une PROCÉDURE d'installation ou de déploiement (dans cette objectifs, elle ne suffit pas), elle n'a pour objectif que de contextualiser, de supporter et de clarifier les commandes qu'elle liste lors de leurs utilisations.
+	En ce sens, cette référence s’appuie sur une certaine connaissance des sujets qu'elle aborde et ne suffit donc pas à expliquer ou comprendre les technologies MPLS et BGP.
+
+
+	Quelques informations importantes pour exploiter ce documents :
+		- L'objectif est de mettre en place un tunnel BGP, reliant deux réseaux géographiquement éloignés d'un même client, à travers un réseau MPLS.
+
+
+		- Nous admettons que le réseau MPLS (réseau central dans l'infrastructure – par exemple Backbone du F.A.I.) exécute son propre protocole de routage (par exemple un processus OSPF 1). ##voir la référence sur OSPF##
+
+
+		- Nous admettons que les deux réseaux du clients (reliés chacun par un routeur "Customer Edge (CE)" à un routeur "Provider Edge (PE)" appartenant au même réseau MPLS – ensemble, ces deux réseaux forme le Backbone du client) éxecutent un protocole de routage dont le processus est complètement distinct de celui du réseau MPLS (par exemple un processus OSPF 2).
+
+
+		- Pour illustré les commandes de ce documents, le processus utilisé par le Client sera le processus OSPF 2 et le client sera identifié dans la configuration BGP par le nom "Customer_A"
+
+
+
+
+
+Mis en place du nuage MPLS au sein du réseau central :
+
+	MPLS doit être activé sur toutes les interfaces se trouvant dans le nuage MPLS (toutes les interfaces des routeurs P ; les interfaces des routeurs PE se trouvant connectées à un routeur P).
+	R1(config)#int <NomInterface>
+	R1(config-if)#mpls ip
+		## active mpls sur l'interface
+
+
+	R1#show mpls interfaces
+		## affiche les interfaces MPLS du routeur.
+	R1#show mpls ldp neighbor
+		## affiche les voisins mpls identifiés par le routeur.
+
+
+
+
+
+Mise en place d'un tunnel BGP pour un client (A faire sur les routeur "Provider Edge" : déclaration des VRF ; du processus OSPF utilisé dans la VRF ; du tunnel BGP ; mise en place des redistributions de route ; configuration des interfaces reliées au routeur "Customer Edge" du client ) :
+
+	R1(config)#ip vrf Customer_A
+		## Déclaration d'une VRF nommée "Customer_A"
+	R1(config-vrf)#rd 65000:1
+		## Déclaration de la route BGP à utiliser (où 65000 est un port libre dans la plage destinée à BGP; 1 identifie la route associée à ce Client)
+	R1(config-vrf)#route-target both 65000:1
+		## Déclaration de route cible entrée/sortie
+
+
+
+	R1(config)#router ospf 2 vrf Customer_A
+		## Déclaration du processus OSPF à utiliser pour cette VRF (ne pas avoir déclaré de "router ospf 2" avant)
+	R1(config-router)#router-id <IP_carte_coté_client>
+		## Déclaration du "router-id" de ce routeur au sein du processus OSPF lié au client de la VRF
+
+
+
+	R1(config)#router bgp 65000
+		## Déclaration du BGP id 65000
+	R1(config-router)#neighbor <router-id_BGP_du_voisin> remote-as 65000
+		## Déclaration d'un voisin BGP, on identifie le voisin par son router-id au sein de BGP. On indique le port distant "65000".
+	R1(config-router)#neighbor <router-id_BGP_du_voisin> update-source loopback 0
+		## La loopback 0 sera le point d'entré du tunnel BGP (il est important que le router-id corresponde à l'@IP de la loopback0 dans un même routeur PE).
+	R1(config-router)#address-family vpnv4
+		## Active un VPN de type IPv4 pour ce tunnel BGP
+	R1(config-router-af)#neighbor <router-id_BGP_du_voisin> activate
+		## Active le voisin comme extrémité du VPN.
+
+
+
+	Depuis le BGP, redistribuons vers le processus OSPF 2 tout ce qui concerne notre VRF Customer_A (dés sa déclaration, le processus OSPF 2 a été associé a la VRF Customer_A).
+	R1(config)#router bgp 65000
+	R1(config-router)#address-family ipv4 vrf Customer_A
+		## Déclare la VRF Customer_A dans BGP
+	R1(config-router-af)#redistribute ospf 2
+		## Redistribution vers le processus OSPF 2
+
+	Depuis le processus OSPF 2, redistribuons vers BGP.
+	R1(config)#router ospf 2
+	R1(config-router)#redistribute bgp 65000 subnets
+
+
+
+	Les interfaces reliées au router "CE" du client doivent être configuré.
+	R1(config)#int <NomInterface>
+	R1(config-if)#ip vrf forwarding Customer_A
+		## Associe l'interface à la VRF Customer_A (après cette commandes, il faut reconfigurer l'@IP de l'interface).
+	R2(config-if)#ip ospf 2 area 0
+		## Associe l'interface au processus OSPF 2 et déclare l'"area" associée (cette "area" étant le Backbone du client elle porte l'identifiant 0 par convention).
+
+
+
+
+
+Commandes de test utiles BGP (à exécuter sur un routeur PE) :
+
+	R1#show ip vrf interfaces
+		## affiche les interfaces affiliées à une VRF.
+
+	R1#show bgp vpnv4 unicast all summary
+		## Affiche les voisins et leurs états pour le "vpnv4".
+
+	R1#show ip route vrf Customer_A
+		## Affiche la table de routage globale pour le VRF Customer_A
+
+	R1#show ip bgp vpnv4 vrf Customer_A
+		## Affiche toutes les informations sur le tunnel BGP établie pour la VRF Customer_A.
+
+	R1#ping vrf Customer @IP
+		## Depuis un routeur PE, permet de ping une @IP à l'interieur d'une VRF.

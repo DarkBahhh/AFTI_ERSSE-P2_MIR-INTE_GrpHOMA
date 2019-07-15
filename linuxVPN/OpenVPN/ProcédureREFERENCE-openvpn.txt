@@ -89,14 +89,12 @@ Installer openvpn :
 			Cela va créer un "dh.pem" dans le répertoire "./pki/".
 
 		Pour finir rapatrier tout les fichiers générés sur le serveur VPN :
-			Le fichier "SHORTNAME-UNIQUE-DU-SRV.crt" qui se trouve sur le CA dans "./pki/issued/"
-			Le fichier "<nom-du-serveur>.req" qui se trouve sur le serveur VPN dans "./pki/reqs"
-			Le fichier "<nom-du-serveur>.key" qui se trouve sur le serveur VPN dans "./pki/private"
-			Copiez ces fichiers dans le répertoire "/etc/openvpn/" du serveur VPN.
+			- Le fichier "SHORTNAME-UNIQUE-DU-SRV.crt" qui se trouve sur le CA dans "./pki/"
+			- Le fichier "<nom-du-serveur>.req" qui se trouve sur le serveur VPN dans "./pki/reqs"
+			- Le fichier "<nom-du-serveur>.key" qui se trouve sur le serveur VPN dans "./pki/private"
+			- Le fichier "dh.pem" qui se trouve sur le serveur VPN dans "./pki/"
+			- Copiez ces fichiers dans le répertoire "/etc/openvpn/" du serveur VPN.
 
-		On finit en initialisant la clé "Diffie-Hellman" sur le serveur VPN:
-			# ./easyrsa gen-dh
-				Cela va créer un "dh.pem" dans le répertoire "./pki/", copiez le aussi dans "/etc/openvpn/" sur le serveur VPN.
 
 
 	Création des Informations PKI pour un client GNU/Linux (se rendre sur le client):
@@ -117,20 +115,31 @@ Installer openvpn :
 			Le fichier "<nom-du-client>.req" qui se trouve sur le client dans "./pki/reqs"
 			Le fichier "<nom-du-client>.key" qui se trouve sur le client dans "./pki/private"
 		Copiez ces fichiers dans le répertoire "/etc/openvpn/" du client.
+
+
+	[ OPTIONNEL ] Pour plus de sécurité, il est possible de configurer une clé symétrique partager entre le serveur et les client (protection contre les attaques DOS et le "UDP port flooping"):
+		Il faut créer la clé partagée :
+			# cd /etc/openvpn
+			# openvpn --genkey --secret ta.key
+				Cette commande créer le fichier "ta.key" dans le répertoire courant (/etc/openvpn).
 ###
 
 
 
 ###
  Partie 2 : Configuration du Serveur OpenVPN
+
 	Copier le fichier exemple de configuration dans le répertoire de configuration de openvpn :
 		# cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
 		# gunzip /etc/openvpn/server.conf.gz
+
 	Renommer le fichier avec le nom du serveur :
 		# mv /etc/openvpn/server.conf /etc/openvpn/<nom-du-serveur>.conf
 
+
 	Éditer ce fichier afin de le configurer et modifier les champs suivant :
 		Les champs vers des fichiers prennent par defaut le PATH "/etc/openvpn/", si le fichier en dans ce répertoire le Nom du fichier fera l'affaire (dans cette exemple nous avons déplacé toute les informations PKI du serveur juste après les avoir générés [ REF Partie 1]), si le fichier est ailleurs vous devez mettre le Chemin Absolue vers le fichier.
+
 
 		port : Port d'écoute du serveur (1194 par defaut).
 		ca : Nom du certificat du CA ("ca.crt").
@@ -138,20 +147,29 @@ Installer openvpn :
 		key : Nom de la clé du serveur VPN ("<nom-du-serveur>.key").
 		dh : Nom du fichier Diffie-Hellman ("dh.pem").
 		server : Il s'agit du réseau virtuel créé pour le tunnel VPN. Le serveur prendra la première addresse de ce réseau. La syntaxe de ce champ est : "server <NETWORK> <MASK>" ; exemple : "server 10.100.0.0 255.255.255.0", ce qui donnera l'@IP "10.100.0.1/24" au serveur VPN).
+
 		push "redirect-gateway def1 bypass-dhcp" : Dé-commenter cette ligne afin que les clients utilisent le serveur VPN comme passerelle par défaut.
 		push "dhcp-option DNS <@IP>" : Donne la configuration DNS, on peut mettre cette ligne autant de fois que l'on veut ajouter des serveurs DNS (Nécessaire si l'option précédente est activé), Dé-commenter pour activer.
+
 		client-to-client : Dé-commenter afin que les clients puissent communiquer entre eux.
-		Pour finir, commenter la ligne du champ "tls-auth".
+
+		Pour finir il y a le champ "tls-auth", il sagit de la clé partagé entre les clients et le serveur, elle est mise en place pour plus de sécurité :
+				- Si elle n'est pas mise en place commenter (#) la ligne;
+				- Si elle est mise en place, indiquer le chemain absolue vers le clé "ta.key" ou le directement le nom du fichier si la clé se trouve dans le répertoire par défaut.
+
 
 	Activer le routage sur le serveur VPN :
 		Éditer le fichier "/etc/sysctl.conf" et dé-commenter (ou ajouter sur CentOS7) ...
-		# net.ipv4.ip_forward = 1
-	Activer le NAT pour permettre au client de se rendre sur INTERNET (relancer la commande à chaque redémarrage de la machine) :
-		# iptables -t nat -A POSTROUTING -o <Nom_Carte_Réseau_WAN> -j MASQUERADE
+			# net.ipv4.ip_forward = 1
+
+		[OPTIONNEL] Activer le NAT pour permettre au client de se rendre sur INTERNET (relancer la commande à chaque redémarrage de la machine) :
+			# iptables -t nat -A POSTROUTING -o <Nom_Carte_Réseau_WAN> -j MASQUERADE
+
 
 	Démarrage du service et activation :
 		Activer le service pour qu'il démarre avec l'OS :
 			# systemctl enable openvpn@nom-du-serveur.service
+
 		Démarrer le service (au démarrage du service, OpenVPN vous demandera la Passphrase de la clé du serveur VPN "<nom-du-serveur>.key" ; entrer la commande "systemd-tty-ask-password-agent" et tapez ensuite le mot de passe) :
 			# systemctl start openvpn@nom-du-serveur.service
 			# systemd-tty-ask-password-agent
@@ -160,9 +178,11 @@ Installer openvpn :
 
 
 ###
- Partie 3 : Configuration du Client OpenVPN (client GNU/Linux)
+ Partie 3 : Configuration du client OpenVPN - GNU/Linux
+
 	De la même manière que pour le serveur, rapatrier les information PKI sur le client, dans "/etc/openvpn" :
 		
+
 	Copier le fichier exemple de configuration dans le répertoire de configuration de openvpn :
 		# cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf /etc/openvpn/
 
@@ -174,21 +194,23 @@ Installer openvpn :
 		cert : Nom du certificat du client ("<SHORTNAME-UNIQUE-DU-CLIENT>.crt")
 		key : Nom de la clé du client ("<nom-du-client.key")
 
+
 	Démarrer OpenVPN sur le client :
 		# service openvpn start
+
 	Pour vérifier l’état de la connexions, chercher une interface "tun0" dans le retour de la commande ...
 		# ip addr
 ###
 
 
 ###
- Partie 4 BONUS : Configuration d'un client Windows
+ Partie 4 : Configuration d'un client OpenVPN - Windows
 
 
 	A FINIR !!!!!!!!!!!!!!!!!!!!!!! :
 		Client OpenVPN sur Windows?
 		Génération PKI sur Windows?
-
+###
 
 
 

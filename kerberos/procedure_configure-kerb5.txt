@@ -1,0 +1,27 @@
+######## Kerberos Linux to AD Win #################
+
+apt install realmd sssd sssd-tools adcli krb5-user packagekit samba-common samba-common-bin samba-libs resolvconf
+apt-get install samba
+apt-get install libnss-winbind
+apt-get install libpam-winbind
+
+
+realm discover MIR-PLATON.LOCAL
+realm join MIR-PLATON.LOCAL
+realm join -v -U Administrateur MIR-PLATON.LOCAL
+
+
+kinit Administrator
+net ads join -k
+net ads join -U Administrateur -S SRVAD1ORS.mir-platon.local
+
+
+/etc/init.d/winbind restart
+systemctl restart winbind
+
+
+wbinfo -u
+getent passwd
+
+
+

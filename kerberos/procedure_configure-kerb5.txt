@@ -1,27 +1,37 @@
 ######## Kerberos Linux to AD Win #################
+# Look for associated configuration files to get configuration.
+# Domain is MIR-PLATON.LOCAL ... change it in kerb5.conf & smb.conf if you need.
 
+# Install packets :
 apt install realmd sssd sssd-tools adcli krb5-user packagekit samba-common samba-common-bin samba-libs resolvconf
 apt-get install samba
 apt-get install libnss-winbind
 apt-get install libpam-winbind
 
+# Push krb5.conf and smb.conf ...
 
+# Discover & Join AD with realm
 realm discover MIR-PLATON.LOCAL
 realm join MIR-PLATON.LOCAL
 realm join -v -U Administrateur MIR-PLATON.LOCAL
 
-
+# If realm failed ... try with kinit & net ads ...
 kinit Administrator
 net ads join -k
+# If failed ... ### SRVAD1ORS.mir-platon.local is password Domain server (often AD server).
 net ads join -U Administrateur -S SRVAD1ORS.mir-platon.local
 
-
+# when host is joined restart winbind and check Domain users
 /etc/init.d/winbind restart
 systemctl restart winbind
-
-
 wbinfo -u
+wbinfo -g
 getent passwd
+getent group
+
+# Push common-*.conf files to /etc/pam.d/ directory to anable connections with domain users ...
+
+# Only gmd3 session manager work with the given configuration.
 
 
 

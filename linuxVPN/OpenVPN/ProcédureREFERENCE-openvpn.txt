@@ -270,6 +270,16 @@ et voila normalement vous etes connectés sur votre serveur a partir de windows.
 
 
 
+update 31/07/19 erreur et solution 
+root@vmi282135:~# wget  https://openvpn.net/downloads/openvpn-as-latest-debian9.amd_64.deb
+--2019-07-31 15:50:12--  https://openvpn.net/downloads/openvpn-as-latest-debian9.amd_64.deb
+Resolving openvpn.net (openvpn.net)... 104.18.187.225, 104.18.188.225
+Connecting to openvpn.net (openvpn.net)|104.18.187.225|:443... connected.
+ERROR: The certificate of ‘openvpn.net’ is not trusted.
+ERROR: The certificate of ‘openvpn.net’ hasn't got a known issuer.
+
+Ajouter cette ligne apres l'url.deb
+--no-check-certificate
 
 
 

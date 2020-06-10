@@ -1,0 +1,93 @@
+######### Commande OSPF ##############################################################
+
+
+Notes importantes :
+	Cette références N'est PAS une PROCÉDURE d'installation ou de déploiement (dans cette objectifs, elle ne suffit pas), elle n'a pour objectif que de contextualiser, de supporter et de clarifier les commandes qu'elle liste lors de leurs utilisations.
+	En ce sens, cette référence s’appuie sur une certaine connaissance des sujets qu'elle aborde et ne suffit donc pas à expliquer ou comprendre la technologie OSPF.
+
+
+
+Configuration initial, ID routeur, initialisation de OSPF :
+
+	R1(config)#interface loopback 0
+	R1(config)#ip address 2.2.2.2 255.255.255.0
+		# Créer une interface de loopback pour servir d'ID au routeur dans OSPF.
+
+
+
+	R1(config)#router ospf 1
+		## Déclare le processus OSPF 1 au sein du routeur et entre dans sa configuration.
+	R1(config-router)#network <@IPnet> <WINLDCARD> area <N°area>
+		## déclare le réseau à inclure dans OSPF, et signifie la zone associé (area), toutes les interfaces dans le réseau seront inclue dans OSPF (paquet hello partirons de l'interfaces).
+
+
+
+	R1(config)#router ospf <N°X>
+	R1(config-router)#redistribute opsf <N°Y> subnets
+		## Redistribue les réseaux d'un processus OSPF N°X vers un processus OSPF N°Y. ATTENTION, Tout les réseaux et tables de routage seront partagés.
+
+
+
+
+
+# Commandes utilitaires :
+	R1#show ip ospf neighbor
+		## affiche les voisins ospf.
+
+
+	R1#clear ip ospf process
+		## reset le process OSPF au sein du routeur.
+
+
+	R1#show ospf interface <NomInterface>
+		## affiche les informations sur un lien (COST, ID, ...), le nom de l’interface indique le lien.
+
+
+	R1#show ip route ospf
+		## affiche les routes données par OSPF (on y voit @IPnet de destination, GW, COST).
+
+
+	R1# show ip ospf database
+		## affiche la "BDR" du router.
+
+
+	R1(config)#interface <NomInterface>
+	R1(config-if)#ip ospf cost 50
+		## permet de modifier le coût d'un lien, le lien est indiqué par le nom de l'interface.
+
+
+	R1(config)#router ospf 1
+	R1(config-routeur)#default-information originate always
+		## configure une route par défaut (dans ospf) au routeur (le mot clé « always » si aucune route par défaut n'existe déjà).
+		## dans l'exemple cela signifie que R1 sera la "passerelle par defaut" du routeur se tenant de l'autre coté du lien.
+
+
+	Configurer l’authentification :
+		On peut configurer l'authentification par interface ou directement par zone : 
+			R1(config)#interface <NomInterface>
+				## pour le faire par interface, on entrera dans un "R1(config-if)#"
+			R1(config)#routeur ospf 1
+				## pour le faire par zone, on entrera dans un "R1(config-router)#"
+			## dans les deux cas, on pourra configurer deux type d’authentification : par text brut ; par algorithme de Hachage ...
+
+		R1(config-if)#ip ospf authentication
+			## active l’authentification par text brut
+		R1(config-if)#ip ospf authentication-key <MotDePass>
+			## renseigne le mot de passe <MotDePass>
+
+		R1(config-if)#ip ospf authentication message-digest
+		R1(config-if)#ip ospf message-digest 1 md5 <clé>
+			## permet d'utiliser l'authentification par hachage, l'algorithme de hachage "md5" est choisie dans cet exemple, le "1" est le numéro de la clé md5, elle doit être identique pour les deux routeurs de chaque cotés du lien, on indique la "clé".
+
+
+
+	R1#debug ip ospf packet
+		## mode debug pour OSPF (utile pour vérifier authentification), nous verrons "aut:1" si l'autentification est activée, "auth0" si aucune authentification n'est configurée et "aut:2" pour l’authentification avec hachage (dans ce dernier cas, on aura un champ "keyid:<N°key>" avec le numéro de la clé, 1 dans notre exemple).
+
+
+	Modification des Timers OSPF :
+		R1(config)#interface <NomInterface>
+		R1(config-if)#ip ospf hello-interval <valeur_en_sec>
+		R1(config-if)#ip ospf dead-interval <valeur_en_sec>
+			## ATTENTION ces valeurs doivent correspondre sur l'interface du routeur de l'autre coté du lien.
+
